@@ -1,3 +1,156 @@
+<h3>Here’s a breakdown of the key features introduced in **Java 11** and **Java 17**, both of which are Long-Term Support (LTS) versions:</h3>
+
+---
+
+## ✅ Java 11 (Released: September 2018)
+
+### 🔹 **New Language Features**
+
+1. **Local-Variable Syntax for Lambda Parameters (JEP 323)**
+
+   * You can now use `var` in lambda parameters.
+
+   ```java
+   (var x, var y) -> x + y;
+   ```
+
+### 🔹 **Standard API Additions**
+
+2. **`String` API Enhancements**
+
+   * `isBlank()`, `lines()`, `strip()`, `stripLeading()`, `stripTrailing()`, `repeat(int)`
+
+   ```java
+   "  ".isBlank(); // true
+   "hello\nworld".lines().count(); // 2
+   ```
+
+3. **`Files.readString()` and `Files.writeString()`**
+
+   ```java
+   String content = Files.readString(Path.of("file.txt"));
+   Files.writeString(Path.of("file.txt"), "Hello");
+   ```
+
+4. **`Optional.isEmpty()`**
+
+   ```java
+   Optional<String> opt = Optional.empty();
+   opt.isEmpty(); // true
+   ```
+
+### 🔹 **Removed/Deprecated**
+
+5. **Removed Java EE and CORBA Modules**
+
+   * e.g., `java.xml.ws`, `java.activation`, `java.xml.bind`, etc.
+
+6. **No more `javac` in JRE**
+
+   * JRE and JDK are no longer separate.
+
+### 🔹 **Performance & Runtime Improvements**
+
+7. **New `HttpClient` API (standardized)**
+
+   * Replaces the old `HttpURLConnection`.
+
+   ```java
+   HttpClient client = HttpClient.newHttpClient();
+   HttpRequest request = HttpRequest.newBuilder()
+       .uri(URI.create("https://example.com"))
+       .build();
+   HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+   ```
+
+---
+
+## ✅ Java 17 (Released: September 2021)
+
+### 🔹 **New Language Features**
+
+1. **Sealed Classes (JEP 409)**
+
+   * Control which classes can extend or implement a class/interface.
+
+   ```java
+   public sealed class Shape permits Circle, Square {}
+   public final class Circle extends Shape {}
+   public final class Square extends Shape {}
+   ```
+
+2. **Pattern Matching for `switch` (Preview)**
+
+   * Improved type checking in switch statements (Preview in 17).
+
+   ```java
+   switch (obj) {
+       case String s -> System.out.println(s.toLowerCase());
+       case Integer i -> System.out.println(i + 1);
+   }
+   ```
+
+3. **Record Classes (Standardized in Java 16, usable in 17)**
+
+   * Compact syntax for immutable data carriers.
+
+   ```java
+   public record Point(int x, int y) {}
+   ```
+
+4. **Text Blocks (Standardized)**
+
+   * Multiline strings using `"""`.
+
+   ```java
+   String html = """
+       <html>
+           <body>Hello</body>
+       </html>
+       """;
+   ```
+
+### 🔹 **New API and Library Features**
+
+5. **New Methods in `java.util` and others**
+
+   * e.g., `Collections.toUnmodifiableList()`, `String.stripIndent()`, etc.
+
+### 🔹 **Removed/Deprecated**
+
+6. **Deprecated the Applet API**
+7. **Removed Experimental AOT and JIT Compiler**
+
+   * `javac` no longer supports `-XX:+UseJVMCICompiler`.
+
+### 🔹 **JVM and Performance**
+
+8. **New macOS AArch64 Port**
+
+   * Support for Apple Silicon (M1/M2 chips).
+
+9. **Improved G1 and ZGC**
+
+   * More efficient garbage collection with lower latency.
+
+---
+
+## ✅ Summary Table
+
+| Feature                 | Java 11              | Java 17    |
+| ----------------------- | -------------------- | ---------- |
+| `var` in lambda         | ✅                    | ✅          |
+| String enhancements     | ✅                    | ✅          |
+| `HttpClient`            | ✅                    | ✅          |
+| Text Blocks             | ❌ (Preview in 13–15) | ✅          |
+| Records                 | ❌                    | ✅          |
+| Sealed Classes          | ❌                    | ✅          |
+| Switch pattern matching | ❌                    | 🔶 Preview |
+| Applet API removal      | ❌                    | ✅          |
+
+---
+
+Would you like a code comparison between Java 11 and 17 features in action?
 
 
 <h3>The terms **"Service Discovery"** and **"Service Registry"** are closely related in the context of microservices architecture, and tools like **Eureka Server** implement both concepts. Here's a breakdown of the differences and how they relate:</h3>
