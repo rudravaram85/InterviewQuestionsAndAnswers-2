@@ -1,5 +1,193 @@
 
 
+<h3>The terms **"Service Discovery"** and **"Service Registry"** are closely related in the context of microservices architecture, and tools like **Eureka Server** implement both concepts. Here's a breakdown of the differences and how they relate:</h3>
+
+---
+
+### 🔍 **Service Discovery vs Service Registry**
+
+| Concept               | Description                                                                                      | Example                                                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| **Service Registry**  | A **database** (or directory) of all services, their instances, and network locations (IP/port). | Eureka Server **stores** information about registered microservices.       |
+| **Service Discovery** | The **process** of locating a service (e.g., finding the URL of a service when needed).          | A client queries Eureka to find the address of a service it wants to call. |
+
+---
+
+### 💡 Eureka Server's Role
+
+**Eureka Server** is part of the **Netflix OSS stack** and provides both:
+
+* ✅ **Service Registry**: Microservices register themselves with Eureka using the `@EnableEurekaClient` annotation.
+* ✅ **Service Discovery**: Clients query Eureka to get information about where other services are running.
+
+---
+
+### 📌 Example Use Case
+
+Imagine three services:
+
+* **User Service**
+* **Order Service**
+* **Eureka Server**
+
+1. **Registration**: User and Order services register with Eureka.
+2. **Discovery**: When the User Service needs to call the Order Service, it queries Eureka to find the location of an available Order Service instance.
+
+---
+
+### Summary
+
+| Term                  | Eureka's Role                                                                         |
+| --------------------- | ------------------------------------------------------------------------------------- |
+| **Service Registry**  | Maintains a list of available service instances.                                      |
+| **Service Discovery** | Provides the means to find those services (either by clients or via a load balancer). |
+
+So in short:
+
+> **Service Registry is the data store; Service Discovery is the lookup process.**
+
+Let me know if you want a diagram or code example!
+
+<h3>To group similar words (anagrams) using Java 8, you can use `Stream` along with `Collectors.groupingBy`. Words are anagrams of each other if their sorted character sequences are the same.</h3>
+
+Here's how to do it with the input list:
+
+```java
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class GroupAnagrams {
+    public static void main(String[] args) {
+        List<String> words = Arrays.asList(
+            "listen", "silent", "enlist",
+            "abc", "cab", "bac",
+            "rat", "tar", "art",
+            "forge"
+        );
+
+        Map<String, List<String>> groupedAnagrams = words.stream()
+            .collect(Collectors.groupingBy(word -> {
+                char[] chars = word.toCharArray();
+                Arrays.sort(chars);
+                return new String(chars);
+            }));
+
+        // Output the grouped anagrams
+        groupedAnagrams.values().forEach(System.out::println);
+    }
+}
+```
+
+### 🔍 Explanation:
+
+* `word -> { ... }`: For each word, convert it to a `char[]`, sort it, and return the sorted string.
+* `Collectors.groupingBy(...)`: Groups words based on the sorted string key.
+* `groupedAnagrams.values()`: Contains the grouped lists of anagrams.
+
+### ✅ Output:
+
+The output (order may vary) will look like:
+
+```
+[listen, silent, enlist]
+[abc, cab, bac]
+[rat, tar, art]
+[forge]
+```
+
+Let me know if you'd like to keep only groups with more than one word or do further processing.
+
+
+
+<h3>Yes, **you can have multiple application contexts** in a Spring Boot application, but it’s not common, and it should only be done when there’s a specific architectural reason.</h3>
+
+---
+
+## ✅ Understanding ApplicationContext in Spring
+
+In Spring, the **`ApplicationContext`** is the central interface for providing configuration information to an application. Typically, a Spring Boot application has a **single application context** created at startup via the `SpringApplication.run()` method.
+
+---
+
+## 🔄 Multiple Application Contexts — When and Why?
+
+You might use multiple contexts in situations like:
+
+1. **Modular Applications**
+   Where different modules need their own isolated context but share a parent context for common beans.
+
+2. **Testing**
+   Creating isolated contexts in integration tests to prevent state leakage.
+
+3. **Plugin Systems**
+   If you're building a plugin framework where each plugin has its own lifecycle and dependencies.
+
+4. **Multi-Tenant Systems**
+   Where each tenant might require isolated configurations, including beans, services, etc.
+
+---
+
+## 🔧 How to Set Up Multiple Contexts
+
+### 1. **Parent-Child Context**
+
+You can create a **hierarchy** of application contexts:
+
+```java
+AnnotationConfigApplicationContext parentContext = new AnnotationConfigApplicationContext();
+parentContext.register(ParentConfig.class);
+parentContext.refresh();
+
+AnnotationConfigApplicationContext childContext = new AnnotationConfigApplicationContext();
+childContext.setParent(parentContext);
+childContext.register(ChildConfig.class);
+childContext.refresh();
+```
+
+In Spring Boot, this is typically done programmatically.
+
+---
+
+### 2. **Multiple Independent Contexts**
+
+If you want **totally isolated contexts**:
+
+```java
+ApplicationContext context1 = new SpringApplicationBuilder(Config1.class).run();
+ApplicationContext context2 = new SpringApplicationBuilder(Config2.class).run();
+```
+
+These contexts will not share beans or environment — complete separation.
+
+---
+
+## ⚠️ Caveats
+
+* Managing multiple contexts increases complexity.
+* Bean visibility between parent-child contexts can be tricky.
+* Lifecycle events and shutdown management become more complicated.
+* Spring Boot’s auto-configuration assumes a single context — using multiple can break expectations or features.
+
+---
+
+## ✅ When to Avoid
+
+If you're doing it just to separate logic, **consider alternatives** like:
+
+* Profiles (`@Profile`)
+* Conditional beans (`@Conditional`)
+* Component scanning
+* Configuration classes
+
+---
+
+## ✅ Conclusion
+
+Yes, Spring Boot supports multiple application contexts, including parent-child hierarchies or totally separate ones. But it should be used with caution, and only when there's a strong architectural need.
+
+Let me know your use case — I can help you determine if multiple contexts are the right approach or if there's a simpler alternative.
+
+
 <h3>Great question! In Spring Boot, `@Controller` and `@Service` are two distinct stereotype annotations used to indicate the role of a class in the application context:</h3>
 
 * `@Controller` — used for classes that handle HTTP requests and return views or responses (web layer).
