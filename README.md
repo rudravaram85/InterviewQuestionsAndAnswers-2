@@ -1,3 +1,54 @@
+public class PrintNumbers {
+    private static final int MAX = 50;
+    private int number = 1;
+
+    public static void main(String[] args) {
+        PrintNumbers printer = new PrintNumbers();
+
+        Thread t1 = new Thread(() -> printer.printOdd());
+        Thread t2 = new Thread(() -> printer.printEven());
+
+        t1.start();
+        t2.start();
+    }
+
+    public synchronized void printOdd() {
+        while (number <= MAX) {
+            if (number % 2 == 1) {
+                System.out.println("Thread 1 (Odd): " + number++);
+                notify(); // Wake up the other thread
+            } else {
+                try {
+                    wait(); // Wait for the other thread
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+        notify(); // To exit the waiting thread at the end
+    }
+
+    public synchronized void printEven() {
+        while (number <= MAX) {
+            if (number % 2 == 0) {
+                System.out.println("Thread 2 (Even): " + number++);
+                notify(); // Wake up the other thread
+            } else {
+                try {
+                    wait(); // Wait for the other thread
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+        notify(); // To exit the waiting thread at the end
+    }
+}
+
+
+
+
+
 <img width="9500" height="504" alt="image" src="https://github.com/user-attachments/assets/abc6a2a9-ea49-4d44-a898-d9e58bc3e659" />
 <img width="9500" height="504" alt="image" src="https://github.com/user-attachments/assets/ee7d4042-8f4a-4546-a478-4a386098b090" />
 <img width="9500" height="504" alt="image" src="https://github.com/user-attachments/assets/d11d2f5d-c55d-4cc0-9118-67ff0e0f4f0f" />
