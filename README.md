@@ -1,3 +1,10 @@
+Here's a simple Java program using **two threads** to print numbers from **1 to 50**. The threads take turns printing the numbers in sequence — one prints the odd numbers, and the other prints the even numbers.
+
+---
+
+### ✅ Java Code: Print 1 to 50 Using Two Threads
+
+```java
 public class PrintNumbers {
     private static final int MAX = 50;
     private int number = 1;
@@ -44,6 +51,32 @@ public class PrintNumbers {
         notify(); // To exit the waiting thread at the end
     }
 }
+```
+
+---
+
+### 🔍 How It Works:
+
+* `number` starts from 1 and is shared by both threads.
+* `Thread 1` prints odd numbers.
+* `Thread 2` prints even numbers.
+* They use `wait()` and `notify()` to alternate execution.
+
+---
+
+### 🧪 Sample Output:
+
+```
+Thread 1 (Odd): 1
+Thread 2 (Even): 2
+Thread 1 (Odd): 3
+Thread 2 (Even): 4
+...
+Thread 1 (Odd): 49
+Thread 2 (Even): 50
+```
+
+Let me know if you'd like a version where each thread prints **any** of the numbers (not just odd/even), or if you'd like it implemented with `ReentrantLock` or `ExecutorService`.
 
 
 
