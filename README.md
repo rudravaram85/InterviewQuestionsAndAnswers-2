@@ -1,3 +1,85 @@
+If you want to use **Java 8's `Stream` API** to **group strings by their repeating characters**, you first need to define what "repeating character" means.
+
+### Assumption:
+
+You want to group the list of words (e.g., `banana`, `apple`, `orange`) **by the first character that repeats** within the word.
+
+---
+
+### 🔍 Step-by-step Example:
+
+Given:
+
+```java
+List<String> strings = Arrays.asList("banana", "apple", "orange");
+```
+
+We want to:
+
+1. Find the first **repeating character** in each word.
+2. Group words **by that character**.
+
+---
+
+### ✅ Full Java 8 Example:
+
+```java
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class GroupByRepeatingChar {
+    public static void main(String[] args) {
+        List<String> strings = Arrays.asList("banana", "apple", "orange");
+
+        Map<Optional<Character>, List<String>> grouped = strings.stream()
+            .collect(Collectors.groupingBy(GroupByRepeatingChar::findFirstRepeatingChar));
+
+        grouped.forEach((key, value) -> 
+            System.out.println("Repeating char: " + key.orElse('-') + " => " + value));
+    }
+
+    // Find first repeating character in a word
+    private static Optional<Character> findFirstRepeatingChar(String word) {
+        Set<Character> seen = new HashSet<>();
+        for (char c : word.toCharArray()) {
+            if (!seen.add(c)) {
+                return Optional.of(c);
+            }
+        }
+        return Optional.empty();
+    }
+}
+```
+
+---
+
+### 🧾 Output:
+
+```
+Repeating char: a => [banana]
+Repeating char: p => [apple]
+Repeating char: - => [orange]
+```
+
+In this case:
+
+* `"banana"` → first repeating char is `'a'`
+* `"apple"` → first repeating char is `'p'`
+* `"orange"` → no repeating char → `Optional.empty()` (displayed as `-`)
+
+---
+
+### 🛠️ Notes:
+
+* If you want to **group by all repeating characters**, not just the first, or handle case-insensitivity, let me know — the logic would change accordingly.
+* You can also use a `Map<Character, List<String>>` and skip `Optional` by filtering words without repeats.
+
+Would you like to explore that version too?
+
+
+
+
 Here's a simple Java program using **two threads** to print numbers from **1 to 50**. The threads take turns printing the numbers in sequence — one prints the odd numbers, and the other prints the even numbers.
 
 ---
