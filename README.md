@@ -1,3 +1,58 @@
+<h2>To find the indices of two elements in an array that sum to a target value using **Java 8**, you can use a combination of a **Map** for efficient lookup and a **for loop** to iterate through the array.</h2>
+
+Here's a concise example in **Java 8** style:
+
+```java
+import java.util.*;
+
+public class TwoSum {
+    public static void main(String[] args) {
+        int[] numbers = {5, 2, 7, 8};
+        int target = 9;
+
+        Optional<int[]> result = findTwoSum(numbers, target);
+
+        result.ifPresentOrElse(
+            indices -> System.out.println("Indices: " + indices[0] + ", " + indices[1]),
+            () -> System.out.println("No two sum solution found.")
+        );
+    }
+
+    public static Optional<int[]> findTwoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return Optional.of(new int[] { map.get(complement), i });
+            }
+            map.put(nums[i], i);
+        }
+
+        return Optional.empty(); // No pair found
+    }
+}
+```
+
+### Explanation:
+
+* A **HashMap** is used to store number → index.
+* For each number, we check if the complement (`target - number`) exists in the map.
+* If found, we return their indices.
+* `Optional<int[]>` is used to handle the result cleanly in Java 8 style.
+
+### Sample Output:
+
+```
+Indices: 1, 2
+```
+
+Because `2 + 7 = 9`, and their indices are `1` and `2`.
+
+Let me know if you want a version using Java 8 streams (though streams aren't ideal for this kind of indexed pairwise logic).
+
+
+
 <h2>In Java (especially when using JDBC or JPA/Hibernate), **transaction isolation levels** define how one transaction is isolated from others in terms of visibility to uncommitted or concurrent data changes. This affects consistency, performance, and the likelihood of encountering concurrency problems like dirty reads, non-repeatable reads, or phantom reads.</h2>
 
 ---
