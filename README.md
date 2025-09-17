@@ -1,3 +1,77 @@
+<h2>In Java (especially when using **Spring Framework**), **transaction propagation** refers to how transactions behave when a **transactional method is called from another transactional method**. It determines whether the called method should **join the existing transaction** or **start a new one**.</h2>
+
+---
+
+### 🔁 **Common Propagation Types in Spring (@Transactional)**
+
+| Propagation Type | Behavior                                                                  |
+| ---------------- | ------------------------------------------------------------------------- |
+| `REQUIRED`       | Joins existing transaction if one exists; otherwise, starts a new one.    |
+| `REQUIRES_NEW`   | Suspends existing transaction and starts a new one.                       |
+| `NESTED`         | Executes within a nested transaction if a current transaction exists.     |
+| `SUPPORTS`       | Joins existing transaction if present; otherwise, runs non-transactional. |
+| `NOT_SUPPORTED`  | Suspends existing transaction and runs non-transactionally.               |
+| `NEVER`          | Throws exception if a transaction exists.                                 |
+| `MANDATORY`      | Must run within a transaction; throws exception if none exists.           |
+
+---
+
+### 🔍 Examples
+
+#### 1. `REQUIRED` (Default)
+
+```java
+@Transactional(propagation = Propagation.REQUIRED)
+public void methodA() {
+    // Will use existing transaction if called within one.
+}
+```
+
+#### 2. `REQUIRES_NEW`
+
+```java
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+public void methodB() {
+    // Always runs in a new transaction.
+}
+```
+
+#### 3. `NESTED`
+
+```java
+@Transactional(propagation = Propagation.NESTED)
+public void methodC() {
+    // Runs in a nested transaction, rollback only applies to inner scope.
+}
+```
+
+---
+
+### 🧠 When to Use What?
+
+| Use Case                           | Propagation Type |
+| ---------------------------------- | ---------------- |
+| Most business methods              | `REQUIRED`       |
+| Save audit log even if main fails  | `REQUIRES_NEW`   |
+| Rollback a sub-process only        | `NESTED`         |
+| Optional transaction participation | `SUPPORTS`       |
+| Must not run in transaction        | `NOT_SUPPORTED`  |
+| Enforce transaction existence      | `MANDATORY`      |
+| Disallow transaction completely    | `NEVER`          |
+
+---
+
+### ⚠️ Notes
+
+* Propagation works only with **Spring AOP** proxy. Make sure you're calling methods from **different beans**, or self-invocation won't apply the transactional behavior.
+* Use `REQUIRES_NEW` carefully – starting multiple new transactions can affect performance.
+
+---
+
+Let me know if you want a **real-world example**, code snippet, or a **diagram** explaining transaction propagation.
+
+
+
 <h2>In **Java**, both **abstract classes** and **interfaces** are used to achieve **abstraction**, but they serve different purposes and have key differences.</h2>
 
 ---
