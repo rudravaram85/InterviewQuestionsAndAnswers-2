@@ -1,3 +1,67 @@
+<h2>In Java (especially when using JDBC or JPA/Hibernate), **transaction isolation levels** define how one transaction is isolated from others in terms of visibility to uncommitted or concurrent data changes. This affects consistency, performance, and the likelihood of encountering concurrency problems like dirty reads, non-repeatable reads, or phantom reads.</h2>
+
+---
+
+### 🔒 **Standard Isolation Levels (JDBC & SQL)**
+
+Java defines 5 standard isolation levels in the `java.sql.Connection` interface:
+
+| Constant                       | Description                                                                | Prevents                                               |
+| ------------------------------ | -------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `TRANSACTION_NONE`             | No transaction support.                                                    | Nothing                                                |
+| `TRANSACTION_READ_UNCOMMITTED` | Allows reading uncommitted changes (dirty reads). Fastest but least safe.  | -                                                      |
+| `TRANSACTION_READ_COMMITTED`   | Only committed data can be read. Prevents dirty reads.                     | ✅ Dirty reads                                          |
+| `TRANSACTION_REPEATABLE_READ`  | Ensures that if you read a row twice in a transaction, it will not change. | ✅ Dirty reads, ✅ Non-repeatable reads                  |
+| `TRANSACTION_SERIALIZABLE`     | Highest isolation. Transactions are executed sequentially.                 | ✅ Dirty reads, ✅ Non-repeatable reads, ✅ Phantom reads |
+
+---
+
+### 🧪 Isolation Problems Explained
+
+| Problem                 | Description                                                                                | Prevented by                |
+| ----------------------- | ------------------------------------------------------------------------------------------ | --------------------------- |
+| **Dirty Read**          | Read data that another transaction has written but not yet committed.                      | `READ_COMMITTED` and above  |
+| **Non-Repeatable Read** | Same query returns different data within a transaction.                                    | `REPEATABLE_READ` and above |
+| **Phantom Read**        | A row appears/disappears in repeated queries due to other transactions inserting/deleting. | `SERIALIZABLE` only         |
+
+---
+
+### 🔧 Setting Isolation in JDBC
+
+```java
+Connection conn = dataSource.getConnection();
+conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+```
+
+---
+
+### 🛠️ With JPA (Hibernate)
+
+You can use `@Transactional` (from Spring) and set the isolation level like this:
+
+```java
+@Transactional(isolation = Isolation.REPEATABLE_READ)
+public void someTransactionalMethod() {
+    // transactional code
+}
+```
+
+Isolation levels are from `org.springframework.transaction.annotation.Isolation`.
+
+---
+
+### ⚠️ Notes & Tips
+
+* Default isolation level depends on the **database** (e.g., PostgreSQL uses `READ COMMITTED`, MySQL defaults vary by engine).
+* Higher isolation improves **consistency** but may reduce **concurrency** and performance.
+* Not all databases support all isolation levels exactly as defined — they may emulate them.
+
+---
+
+Would you like a comparison table of isolation support in different databases (PostgreSQL, MySQL, Oracle, etc.)?
+
+
+
 If you want to use **Java 8's `Stream` API** to **group strings by their repeating characters**, you first need to define what "repeating character" means.
 
 ### Assumption:
